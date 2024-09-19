@@ -9,6 +9,19 @@ from lettings.models import Letting
 
 
 def index(request):
+    """
+    Vue pour la page d'index des locations (lettings).
+
+    Cette vue récupère la liste de toutes les locations (lettings) depuis la base de données
+    et les transmet au template `lettings/index.html` via le contexte.
+
+    Args:
+        request (HttpRequest): L'objet de la requête HTTP.
+
+    Returns:
+        HttpResponse: La réponse HTTP avec le rendu du template 'lettings/index.html',
+        incluant la liste des locations dans le contexte sous le nom 'lettings_list'.
+    """
     lettings_list = Letting.objects.all()
     context = {'lettings_list': lettings_list}
     return render(request, "lettings/index.html", context)
@@ -27,6 +40,20 @@ def index(request):
 
 
 def letting(request, letting_id):
+    """
+    Vue pour afficher les détails d'une location spécifique (letting).
+
+    Cette vue récupère une location (letting) en fonction de l'identifiant donné
+    et transmet ses informations au template `lettings/letting.html` via le contexte.
+
+    Args:
+        request (HttpRequest): L'objet de la requête HTTP.
+        letting_id (int): L'identifiant unique de la location à afficher.
+
+    Returns:
+        HttpResponse: La réponse HTTP avec le rendu du template 'lettings/letting.html',
+        incluant le titre et l'adresse de la location dans le contexte.
+    """
     letting = Letting.objects.get(id=letting_id)
     context = {
         'title': letting.title,
