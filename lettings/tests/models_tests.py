@@ -14,7 +14,7 @@ def valid_address_data():
         'country_iso_code': 'FRA'
     }
 
-    
+
 @pytest.fixture
 @pytest.mark.django_db
 def address(valid_address_data):
@@ -23,12 +23,14 @@ def address(valid_address_data):
     assert str(address) == '123 Main Street'
     return address
 
+
 @pytest.fixture
 def valid_letting_data(address):
     return {
         'title': 'Charmante maison de ville',
         'address': address
     }
+
 
 @pytest.fixture
 def letting(valid_letting_data):
@@ -80,26 +82,31 @@ def test_address_missing_required_fields():
     for field in required_fields:
         assert field in excinfo.value.message_dict
 
+
 @pytest.mark.django_db
 def test_letting_creation(letting):
     assert letting.pk is not None
     assert letting.title == 'Charmante maison de ville'
     assert letting.address is not None
 
+
 @pytest.mark.django_db
 def test_letting_str(letting):
     assert str(letting) == 'Charmante maison de ville'
+
 
 @pytest.mark.django_db
 def test_letting_address_relationship(letting):
     address = letting.address
     assert address.city == 'Paris'
 
+
 @pytest.mark.django_db
 def test_letting_deletion_on_address_delete(address, letting):
     address.delete()
     with pytest.raises(Letting.DoesNotExist):
         Letting.objects.get(pk=letting.pk)
+
 
 @pytest.mark.django_db
 def test_letting_title_max_length(address):
@@ -108,6 +115,7 @@ def test_letting_title_max_length(address):
     with pytest.raises(ValidationError) as excinfo:
         letting.full_clean()
     assert 'title' in excinfo.value.message_dict
+
 
 @pytest.mark.django_db
 def test_letting_unique_address(address):
