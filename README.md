@@ -15,11 +15,6 @@ Dans le reste de la documentation sur le développement local, il est supposé q
 
 ### macOS / Linux
 
-#### Cloner le repository
-
-- `cd /path/to/put/project/in`
-- `git clone https://github.com/OpenClassrooms-Student-Center/Python-OC-Lettings-FR.git`
-
 #### Créer l'environnement virtuel
 
 - `cd /path/to/Python-OC-Lettings-FR`
@@ -75,3 +70,18 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 - Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
 - Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+
+
+###  Sentry
+
+Installer / mettre à jour Sentry :
+`pip install --upgrade sentry-sdk`
+
+**Obtenir votre DSN Sentry** : Après avoir créé un projet sur Sentry, vous pouvez trouver votre DSN dans les paramètres du projet sous la section **Client Keys (DSN)**.
+  
+  ![Obtenir le DSN](https://docs.sentry.io/assets/sentry-dsn.png)
+
+Creer à la racine du programme un fichier sentry_key.py
+Dans ce fichier y mettre `SENTRY_LINK ="votreliensentry"`
+
+Remplacez "votreliensentry" par votre DSN réel fourni par Sentry lors de la création de votre projet.

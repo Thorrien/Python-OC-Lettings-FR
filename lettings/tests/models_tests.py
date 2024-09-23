@@ -2,7 +2,6 @@ import pytest
 from django.core.exceptions import ValidationError
 from lettings.models import Address, Letting
 
-
 @pytest.fixture
 def valid_address_data():
     return {

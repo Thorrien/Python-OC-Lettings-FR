@@ -2,9 +2,12 @@ from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import User
+import logging
 
+logger = logging.getLogger("profiles.models")
 
 class Profile(models.Model):
+    logger.info('Modèle Profile de profiles utilisé')
     """
     Modèle représentant un profil utilisateur.
 

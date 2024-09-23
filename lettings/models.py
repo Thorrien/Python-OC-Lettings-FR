@@ -2,9 +2,13 @@ from django.db import models
 
 # Create your models here.
 from django.core.validators import MaxValueValidator, MinLengthValidator
+import logging
+
+logger = logging.getLogger("lettings.models")
 
 
 class Address(models.Model):
+    logger.info('Modèle Address de lettings utilisé')
     """
     Modèle représentant une adresse.
 
@@ -46,6 +50,7 @@ class Address(models.Model):
 
 
 class Letting(models.Model):
+    logger.info('Modèle Letting de lettings utilisé')
     """
     Modèle représentant une location (Letting).
 

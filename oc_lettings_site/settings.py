@@ -1,6 +1,8 @@
 import os
-
+import sentry_sdk
 from pathlib import Path
+from sentry_key import SENTRY_LINK
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -117,3 +119,77 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+sentry_sdk.init(
+    dsn=SENTRY_LINK,
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
+
+
+#DEBUG : Informations détaillées, généralement utiles uniquement lors du diagnostic de problèmes.
+#INFO : Confirmation que les choses fonctionnent comme prévu.
+#WARNING : Indication qu'un événement inattendu s'est produit, ou qu'un problème futur est possible.
+#ERROR : En raison d'un problème plus sérieux, le logiciel n'a pas pu exécuter une fonction.
+#CRITICAL : Une erreur grave, indiquant que le programme lui-même peut être incapable de continuer à fonctionner.
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'root': { 
+        'level': 'WARNING',
+        'handlers': ['console', 'sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'sentry': {
+            'class': 'sentry_sdk.integrations.logging.EventHandler',
+            'level': 'INFO',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'sentry'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'oc_lettings_site': {
+            'handlers': ['console', 'sentry'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'lettings.views': {
+            'handlers': ['console', 'sentry'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'lettings.models': {
+            'handlers': ['sentry'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'profiles.views': {
+            'handlers': ['console', 'sentry'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'profiles.models': {
+            'handlers': ['sentry'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
