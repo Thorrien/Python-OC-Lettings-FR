@@ -3,14 +3,15 @@ from django.urls import reverse
 from profiles.models import User, Profile
 
 
-
 @pytest.fixture
 def user(db):
     return User.objects.create_user(username='testuser', password='testpass')
 
+
 @pytest.fixture
 def profile(user):
     return Profile.objects.create(user=user, favorite_city='Paris')
+
 
 @pytest.mark.django_db
 def test_index_view_profile(client, profile):
@@ -25,6 +26,7 @@ def test_index_view_profile(client, profile):
 
     content = response.content.decode()
     assert 'testuser' in content
+
 
 @pytest.mark.django_db
 def test_view_letting(client, profile):

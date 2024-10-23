@@ -2,12 +2,13 @@ import pytest
 from django.core.exceptions import ValidationError
 from lettings.models import Address, Letting
 
+
 @pytest.fixture
 def valid_address_data():
     return {
         'number': 123,
-        'street': 'Main Street',
-        'city': 'Paris',
+        'street': 'Rue du perche',
+        'city': 'Angers',
         'state': 'FR',
         'zip_code': 75000,
         'country_iso_code': 'FRA'
@@ -19,7 +20,7 @@ def valid_address_data():
 def address(valid_address_data):
     address = Address.objects.create(**valid_address_data)
     assert address.pk is not None
-    assert str(address) == '123 Main Street'
+    assert str(address) == '123 Rue du perche'
     return address
 
 
@@ -97,7 +98,7 @@ def test_letting_str(letting):
 @pytest.mark.django_db
 def test_letting_address_relationship(letting):
     address = letting.address
-    assert address.city == 'Paris'
+    assert address.city == 'Angers'
 
 
 @pytest.mark.django_db

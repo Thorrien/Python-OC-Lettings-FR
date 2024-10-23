@@ -2,16 +2,18 @@ import pytest
 from django.urls import reverse
 from lettings.models import Letting, Address
 
+
 @pytest.fixture
 def address():
     return Address.objects.create(
         number=123,
-        street='Main Street',
-        city='Paris',
+        street='Rue du perche',
+        city='Sablé',
         state='FR',
         zip_code=75000,
         country_iso_code='FRA'
     )
+
 
 @pytest.fixture
 def letting(address):
@@ -19,6 +21,7 @@ def letting(address):
         title='Charmante maison de ville',
         address=address
     )
+
 
 @pytest.mark.django_db
 def test_index_view_letting(client, letting):
@@ -33,6 +36,7 @@ def test_index_view_letting(client, letting):
 
     content = response.content.decode()
     assert 'Charmante maison de ville' in content
+
 
 @pytest.mark.django_db
 def test_view_letting(client, letting):

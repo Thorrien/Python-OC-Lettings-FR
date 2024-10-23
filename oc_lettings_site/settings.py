@@ -1,8 +1,8 @@
 import os
 import sentry_sdk
-from pathlib import Path
-from sentry_key import SENTRY_LINK
 
+from pathlib import Path
+SENTRY_LINK = ""
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,12 +15,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ton-domaine.com']
-
-
-
+ALLOWED_HOSTS = ['localhost', 'oc-lettings-site-b8b1.onrender.com', '127.0.0.1', '0.0.0.0']
+CSRF_TRUSTED_ORIGINS = ['https://oc-lettings-site-b8b1.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
@@ -33,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lettings',
     'profiles',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -43,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'oc_lettings_site.urls'
@@ -67,6 +67,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'oc_lettings_site.wsgi.application'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -126,17 +127,18 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-
-#DEBUG : Informations détaillées, généralement utiles uniquement lors du diagnostic de problèmes.
-#INFO : Confirmation que les choses fonctionnent comme prévu.
-#WARNING : Indication qu'un événement inattendu s'est produit, ou qu'un problème futur est possible.
-#ERROR : En raison d'un problème plus sérieux, le logiciel n'a pas pu exécuter une fonction.
-#CRITICAL : Une erreur grave, indiquant que le programme lui-même peut être incapable de continuer à fonctionner.
+# DEBUG : Informations détaillées, généralement utiles uniquement lors du diagnostic de problèmes.
+# INFO : Confirmation que les choses fonctionnent comme prévu.
+# WARNING : Indication qu'un événement inattendu s'est produit, ou qu'un problème
+# futur est possible.
+# ERROR : En raison d'un problème plus sérieux, le logiciel n'a pas pu exécuter une fonction.
+# CRITICAL : Une erreur grave, indiquant que le programme lui-même peut être incapable
+# de continuer à fonctionner.
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'root': { 
+    'root': {
         'level': 'WARNING',
         'handlers': ['console', 'sentry'],
     },
@@ -193,3 +195,6 @@ LOGGING = {
         },
     }
 }
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

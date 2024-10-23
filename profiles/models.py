@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger("profiles.models")
 
+
 class Profile(models.Model):
     logger.info('Modèle Profile de profiles utilisé')
     """
@@ -17,7 +18,7 @@ class Profile(models.Model):
     Attributes:
         user (OneToOneField): Relation one-to-one avec le modèle User de Django. La suppression
         de l'utilisateur entraînera la suppression du profil associé.
-        favorite_city (CharField): Ville préférée de l'utilisateur, champ facultatif avec une 
+        favorite_city (CharField): Ville préférée de l'utilisateur, champ facultatif avec une
         longueur maximale de 64 caractères.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)

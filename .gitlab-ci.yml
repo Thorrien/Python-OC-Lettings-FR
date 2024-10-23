@@ -1,0 +1,125 @@
+# .gitlab-ci.yml
+
+image: python:3.12
+
+services:
+  - name: postgres:13
+    alias: db
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DATABASE_URL: "postgres://postgres:postgres@db:5432/test_db"
+  DJANGO_SETTINGS_MODULE: 'oc_lettings_site.settings'
+  PYTHONUNBUFFERED: "1"
+  CI_DEBUG_TRACE: "0"
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .venv/
+    - __pycache__/
+    - coverage.xml
+
+install_dependencies:
+  stage: install
+  script:
+    - echo "Dépendances installées."
+  artifacts:
+    paths:
+      - .venv/
+    expire_in: 1 week
+
+lint:
+  stage: lint
+  dependencies:
+    - install_dependencies
+  before_script:
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - pip install flake8
+    - flake8 oc_lettings_site lettings profiles
+  artifacts:
+    when: always
+    paths:
+      - flake8.log
+    reports:
+      codequality: flake8.log
+    expire_in: 1 week
+
+test:
+  stage: test
+  dependencies:
+    - install_dependencies
+  before_script:
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - pip install pytest pytest-django pytest-cov
+    - python manage.py makemigrations
+    - python manage.py migrate
+    - pytest --ds=oc_lettings_site.settings_test --cov=lettings --cov=profiles --cov=oc_lettings_site --cov-report=xml --cov-fail-under=80
+  artifacts:
+    when: always
+    paths:
+      - coverage.xml
+    reports:
+      codequality: coverage.xml
+    expire_in: 1 week
+
+  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
+
+#quality:
+#  stage: quality
+#  allow_failure: true
+#  image: docker:stable
+#  services:
+#    - docker:dind
+#  script:
+#    - mkdir codequality-results
+#    - docker run
+#        --env CODECLIMATE_CODE="$PWD"
+#        --volume "$PWD":/code
+#        --volume /var/run/docker.sock:/var/run/docker.sock
+#        --volume /tmp/cc:/tmp/cc
+#        codeclimate/codeclimate analyze -f html > ./codequality-results/index.html
+#  artifacts:
+#    paths:
+#      - codequality-results/
+
+build:
+  stage: build
+  only:
+    - main
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  needs:
+    - build
+  script:
+    - curl -X POST "https://api.render.com/deploy/srv-cs0phum8ii6s73csi3q0?key=krfzb13UhBE"

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procédures de déploiement et gestion de l’application &mdash; Documentation oc lettings site 1.00</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Gestion du pipeline CI/CD" href="yml.html" />
+    <link rel="prev" title="Guide d’utilisation" href="instructions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            oc lettings site
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demarage_rapide.html">Guide de démarrage rapide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technologies_langages.html">Technologies et langages de programmation utilisés</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">Structure de la Base de Données et Modèles de Données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Guide d’utilisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Procédures de déploiement et gestion de l’application</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#recapitulatif-du-fonctionnement-du-deploiement">Récapitulatif du fonctionnement du déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-requise">Configuration requise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etapes-necessaires-pour-effectuer-le-deploiement">Étapes nécessaires pour effectuer le déploiement</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yml.html">Gestion du pipeline CI/CD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Apps Django</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">oc lettings site</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Procédures de déploiement et gestion de l’application</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deploiment.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="procedures-de-deploiement-et-gestion-de-l-application">
+<h1>Procédures de déploiement et gestion de l’application<a class="headerlink" href="#procedures-de-deploiement-et-gestion-de-l-application" title="Lien permanent vers cette rubrique"></a></h1>
+<p>Cette page détaille le processus de déploiement de l’application ainsi que la gestion du pipeline GitLab CI/CD. Vous trouverez un récapitulatif du fonctionnement du pipeline, les configurations nécessaires et les étapes à suivre pour effectuer le déploiement.</p>
+<section id="recapitulatif-du-fonctionnement-du-deploiement">
+<h2>Récapitulatif du fonctionnement du déploiement<a class="headerlink" href="#recapitulatif-du-fonctionnement-du-deploiement" title="Lien permanent vers cette rubrique"></a></h2>
+<p>Le pipeline GitLab CI/CD est conçu pour gérer l’intégration continue, la qualité du code, les tests et enfin le déploiement de l’application. Chaque étape est orchestrée via le fichier <cite>.gitlab-ci.yml</cite>. Une fois le build Docker de l’application terminé, celle-ci est déployée automatiquement sur un service de déploiement continu, ici <strong>Render</strong>.</p>
+<p>Le pipeline suit ces étapes :</p>
+<ol class="arabic simple">
+<li><p><strong>Install</strong> : Installation des dépendances Python et création de l’environnement virtuel.</p></li>
+<li><p><strong>Lint</strong> : Vérification de la qualité du code avec Flake8.</p></li>
+<li><p><strong>Test</strong> : Exécution des tests unitaires et de la migration de la base de données.</p></li>
+<li><p><strong>Quality</strong> : Analyse de la qualité du code avec CodeClimate (Facultatif).</p></li>
+<li><p><strong>Build</strong> : Construction et push de l’image Docker de l’application.</p></li>
+<li><p><strong>Deploy</strong> : Déploiement automatique de l’image Docker sur l’environnement de production via Render.</p></li>
+</ol>
+</section>
+<section id="configuration-requise">
+<h2>Configuration requise<a class="headerlink" href="#configuration-requise" title="Lien permanent vers cette rubrique"></a></h2>
+<ol class="arabic">
+<li><p><strong>Environnement</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>PostgreSQL 13</strong> : La base de données utilisée par l’application. Une configuration minimale est définie dans le fichier <cite>.gitlab-ci.yml</cite>.</p></li>
+<li><p><strong>Python 3.12</strong> : Utilisé pour exécuter l’application et les tests.</p></li>
+<li><p><strong>Django</strong> : Cadre web Python utilisé, avec les paramètres de configuration définis dans <cite>DJANGO_SETTINGS_MODULE</cite>.</p></li>
+<li><p><strong>Docker</strong> : Utilisé pour la construction et le déploiement de l’application sous forme d’image Docker.</p></li>
+<li><p><strong>Service de déploiement</strong> : L’application est déployée sur <strong>Render</strong>, en utilisant une API REST pour déclencher le déploiement.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Variables d’environnement</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>POSTGRES_DB</cite>, <cite>POSTGRES_USER</cite>, <cite>POSTGRES_PASSWORD</cite> : Informations pour configurer PostgreSQL.</p></li>
+<li><p><cite>DATABASE_URL</cite> : URL de connexion à la base de données PostgreSQL.</p></li>
+<li><p><cite>CI_REGISTRY</cite>, <cite>CI_REGISTRY_USER</cite>, <cite>CI_REGISTRY_PASSWORD</cite> : Utilisées pour l’authentification sur le registre Docker.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="etapes-necessaires-pour-effectuer-le-deploiement">
+<h2>Étapes nécessaires pour effectuer le déploiement<a class="headerlink" href="#etapes-necessaires-pour-effectuer-le-deploiement" title="Lien permanent vers cette rubrique"></a></h2>
+<p>Voici les étapes détaillées à suivre pour effectuer le déploiement sans difficulté :</p>
+<ol class="arabic">
+<li><p><strong>Configurer GitLab CI/CD</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Assurez-vous que GitLab CI/CD est correctement configuré et activé dans le projet.</p></li>
+<li><dl class="simple">
+<dt>Ajoutez les <strong>variables CI</strong> nécessaires dans la configuration GitLab :</dt><dd><ul>
+<li><p><cite>CI_REGISTRY_USER</cite>, <cite>CI_REGISTRY_PASSWORD</cite> : Credentials pour accéder au registre Docker.</p></li>
+<li><p><cite>POSTGRES_DB</cite>, <cite>POSTGRES_USER</cite>, <cite>POSTGRES_PASSWORD</cite>, <cite>DATABASE_URL</cite> : Variables pour la base de données PostgreSQL.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Pipeline CI/CD</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Le pipeline est automatiquement déclenché lors des pushs sur la branche <cite>main</cite>. Assurez-vous de bien travailler sur cette branche pour que le déploiement fonctionne correctement.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Installation des dépendances</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Le job <cite>install_dependencies</cite> installe les dépendances Python dans un environnement virtuel. Cela inclut les bibliothèques nécessaires pour faire tourner Django ainsi que les tests.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Linting et tests</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Les jobs <cite>lint</cite> et <cite>test</cite> vérifient respectivement la qualité du code et l’intégrité de l’application via les tests unitaires. Ces étapes doivent réussir avant d’aller plus loin dans le pipeline.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Analyse de la qualité</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Un rapport de qualité est généré avec <strong>CodeClimate</strong>. Ce rapport est accessible sous forme d’artifact dans GitLab, mais cette étape n’empêche pas le pipeline de continuer même si elle échoue.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Construction Docker</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Le job <cite>build</cite> construit une image Docker de l’application et la pousse dans le registre Docker. Vous devez vous assurer que <strong>Docker</strong> est bien installé et que les variables CI pour le registre sont correctement configurées.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Déploiement</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Le job <cite>deploy</cite> déclenche le déploiement via une requête <cite>POST</cite> à l’API de <strong>Render</strong>. L’application sera ainsi déployée dans l’environnement de production. L’URL pour déclencher ce déploiement est déjà incluse dans le fichier <cite>.gitlab-ci.yml</cite>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="instructions.html" class="btn btn-neutral float-left" title="Guide d’utilisation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="yml.html" class="btn btn-neutral float-right" title="Gestion du pipeline CI/CD" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, BARILLER Eric / OC.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

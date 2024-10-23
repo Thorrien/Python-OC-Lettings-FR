@@ -41,7 +41,6 @@ class Address(models.Model):
     class Meta:
         """
         Meta-information pour le modèle Address.
-        
         verbose_name: Nom singulier pour l'affichage du modèle (ex: "Adresse").
         verbose_name_plural: Nom pluriel pour l'affichage du modèle (ex: "Adresses").
         """
